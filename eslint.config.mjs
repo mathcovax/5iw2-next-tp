@@ -33,6 +33,8 @@ export default [
 			"react/jsx-no-leaked-render": "off",
 			"react/jsx-closing-bracket-location": "off",
 			"react/jsx-props-no-spreading": "off",
+			"treact/jsx-no-literals": "off",
+			"react/forbid-component-props": "off",
 		},
 		files: ["**/*.{ts,tsx}"],
 	},
