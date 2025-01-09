@@ -1,16 +1,42 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import {duplojsEslintOpen} from "@duplojs/eslint";
+import eslintPluginReact from "eslint-plugin-react";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const reactRecommandedConfig = eslintPluginReact.configs.flat.all
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+export default [
+	{
+		...duplojsEslintOpen,
+		plugins: {
+			...duplojsEslintOpen.plugins,
+			...reactRecommandedConfig.plugins,
+		},
+		languageOptions: {
+			...duplojsEslintOpen.languageOptions,
+			parserOptions: {
+				project: false,
+				projectService: true,
+				allowDefaultProject: ['*.ts', '*.tsx'],
+				ecmaFeatures: {
+					jsx: true,
+				},
+			}
+		},
+		rules: {
+			...duplojsEslintOpen.rules,
+			...reactRecommandedConfig.rules,
+			"react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
+			"react/react-in-jsx-scope": "off",
+			"react/jsx-indent": ["error", "tab"],
+			"react/jsx-indent-props": [1, "tab"],
+			"react/jsx-no-bind": "off",
+			"react/require-default-props": "off",
+			"react/jsx-no-leaked-render": "off",
+			"react/jsx-closing-bracket-location": "off",
+			"react/jsx-props-no-spreading": "off",
+		},
+		files: ["**/*.{ts,tsx}"],
+	},
+	{
+		ignores: ["coverage", "dist"]
+	}
 ];
-
-export default eslintConfig;
