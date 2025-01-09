@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { z } from "zod";
 import { httpClient } from ".";
 import { typesSchema } from "./useQueryGetType";
@@ -12,40 +11,22 @@ export const pokemonSchema = z.object({
 	types: typesSchema.array(),
 });
 
-export type Type = z.infer<typeof typesSchema>;
+export type Pokemon = z.infer<typeof pokemonSchema>;
 
 export function useQueryGetPokemon() {
-	const [types, setTypes] = useState<Type[]>([]);
-
-	function fetchTypes() {
+	function fetchPokemon(pokedexId: number) {
 		return httpClient.get(
-			"/types",
+			"/pokemons/{pokedexId}",
 			{
 				mode: "cors",
+				params: { pokedexId },
 			},
 		)
 			.then((res) => res.body)
-			.then(typesSchema.array().parse);
+			.then(pokemonSchema.parse);
 	}
 
-	useEffect(
-		() => {
-			void fetchTypes()
-				.then((data) => {
-					setTypes([
-						{
-							id: -1,
-							name: "all",
-							image: "",
-						},
-						...data,
-					]);
-				});
-		},
-		[],
-	);
-
 	return {
-		types,
+		fetchPokemon,
 	};
 }
