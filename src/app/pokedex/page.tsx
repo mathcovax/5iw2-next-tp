@@ -50,6 +50,7 @@ export default function pokedex() {
 					onChange={(event) => void setQueryPokemon({
 						...queryPokemon,
 						name: event.target.value,
+						page: 0,
 					})}
 					type="text"
 					value={queryPokemon.name}
